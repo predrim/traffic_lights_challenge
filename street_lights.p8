@@ -5,6 +5,8 @@ __lua__
 	
 function _init()
 
+ -- checa se cada luz e verde
+ -- ou vermelha
 	light_state_n = "red"
 	light_state_s = "green"
 	light_state_e = "green"
@@ -12,7 +14,16 @@ function _init()
 end
 
 function _update()
+
+ -- cada loop dura 10 segundos.
+ -- o primeiro loop tem que comecar
+ -- do "meio" para que os semaforos
+ -- nao se embaralhem mos proximos.
  if time() > 10 then
+ 
+ -- tempo em que cada luz fica
+ -- acesa
+ -- (vermelho,verde)
  	_light_n(10,10/3)
 		_light_w(10,10/3)
 		_light_s(10/3,10)
@@ -27,32 +38,34 @@ function _update()
 end
 
 function _draw()
- cls()
- draw_map()
+ cls() -- limpa a tela a cada loop
+ draw_map() -- desenha o mapa a cada loop
  
  
- -- northern traffic light
+ -- semaforo norte
+ -- desenhas os semaforos na tela
+ -- e troca quando necessario
  if light_state_n == "red" then
   spr(1,76,32)
  elseif light_state_n == "green" then
  	spr(2,76,32)
  end
  
- -- southern traffic light
+ -- semaforo sul
  if light_state_s == "red" then
   spr(1,52,88)
  elseif light_state_s == "green" then
  	spr(2,52,88)
  end
  
- -- eastern traffic light
+ -- semaforo leste
  if light_state_e == "red" then
   spr(1,92,72)
  elseif light_state_e == "green" then
  	spr(2,92,72)
  end
  
- -- western traffic light
+ -- semaforo oeste
  if light_state_w == "red" then
   spr(1,36,48)
  elseif light_state_w == "green" then
@@ -64,30 +77,48 @@ end
 -- map loop
 
 function draw_map()
-	map(0,0,4,32,15,8)
+	map(0,0,4,32,15,8) 
+	-- coordenadas do mapa a ser
+	-- desenhado.																			
 end
 -->8
 -- northern street light loop
 
 local last_switch_time = time()
+-- guarda o tempo da ultima
+-- mudanca de cor.
 
 function _light_n(red_time,green_time)
 	
 	local current_time = time()
-	local elapsed_time = current_time - last_switch_time
+ -- guarda o tempo decorrido atual
 
+	local elapsed_time = current_time - last_switch_time
+ -- tira a diferenca entre o
+ -- tempo atual e o da ultima
+ -- mudaca
+
+ -- recebe o tempo que cada cor
+ -- deve ficar acesa 
 	if light_state_n == "red" then
 		 current_state_time = red_time
 	else
 		 current_state_time = green_time
 	end
-
+ 
+ -- troca a cor do semaforo
+ -- se o tempo decorrido ultrapassar
+ -- o tempo que a cor deve 
+ -- ficar acesa
 	if elapsed_time >= current_state_time then
 		if light_state_n == "red" then
 			light_state_n = "green"
 		else
 			light_state_n = "red"
 		end
+		
+		-- atualiza o tempo da ultima
+		-- troca
 		last_switch_time = current_time -- reset the timer
 	end
 	
